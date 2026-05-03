@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spiaggia dei Gabbiani</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --sand: #F5F0E8;
+      --sand-dark: #E8E0D0;
+      --sea: #1A3A4A;
+      --sea-mid: #2C5F74;
+      --foam: #C8DDE5;
+      --accent: #D4956A;
+      --text: #1A1A1A;
+      --text-light: #6B6B6B;
+      --white: #FFFFFF;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--sand); color: var(--text); overflow-x: hidden; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 1rem 2.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1.5rem;
+      background: transparent;
+      transition: background 0.4s, backdrop-filter 0.4s;
+    }
+    nav.scrolled { background: rgba(245,240,232,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--sand-dark); }
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem; font-weight: 600; letter-spacing: 0.06em;
+      color: var(--accent);
+      text-decoration: none;
+      transition: color 0.4s; white-space: nowrap; flex-shrink: 0;
+      margin-right: 1rem;
+      text-shadow: 0 1px 6px rgba(0,0,0,0.5);
+      line-height: 1;
+    }
+    .nav-logo span {
+      display: block;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.58rem;
+      font-weight: 300;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.7);
+      margin-top: 0.6rem;
+      text-shadow: none;
+    }
+    nav.scrolled .nav-logo { color: var(--accent); text-shadow: none; }
+    nav.scrolled .nav-logo span { color: var(--text-light); }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+      font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(255,255,255,0.9); text-decoration: none; transition: color 0.3s;
+    }
+    nav.scrolled .nav-links a { color: var(--text-light); }
+    .nav-links a:hover { color: var(--accent) !important; }
+    .nav-cta {
+      font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 0.6rem 1.6rem; border: 1px solid rgba(255,255,255,0.7);
+      color: var(--white); text-decoration: none; transition: all 0.3s; border-radius: 2px;
+    }
+    nav.scrolled .nav-cta { border-color: var(--sea); color: var(--sea); }
+    .nav-cta:hover { background: var(--accent) !important; border-color: var(--accent) !important; color: var(--white) !important; }
+
+    /* ── HERO WOW ── */
+    #hero {
+      position: relative; height: 100vh; min-height: 640px;
+      display: flex; align-items: center;
+      overflow: hidden;
+    }
+    .hero-bg { position: absolute; inset: 0; background: #06151e; }
+    .hero-bg-img {
+      position: absolute; inset: 0;
+      background: url('foto_drone.jpg') center 40% / cover no-repeat;
+      opacity: 0.9;
+      transform: scale(1.04);
+      animation: slowZoom 18s ease-in-out infinite alternate;
+    }
+    @keyframes slowZoom {
+      from { transform: scale(1.04); }
+      to   { transform: scale(1.12); }
+    }
+    .hero-overlay {
+      position: absolute; inset: 0;
+      background:
+        linear-gradient(to right, rgba(6,21,30,0.55) 0%, rgba(6,21,30,0.1) 60%, transparent 100%),
+        linear-gradient(to top, rgba(6,21,30,0.6) 0%, transparent 50%);
+    }
+    .wave-layer {
+      position: absolute; bottom: 0; left: -10%; width: 120%; height: 160px;
+      opacity: 0.1; border-radius: 50% 50% 0 0 / 60px;
+    }
+    .wave-layer:nth-child(2) { background: var(--white); animation: wave 9s ease-in-out infinite; }
+    .wave-layer:nth-child(3) { height: 120px; background: var(--foam); animation: wave 13s ease-in-out infinite reverse; opacity: 0.07; }
+    .wave-layer:nth-child(4) { height: 90px; background: var(--white); animation: wave 7s ease-in-out infinite 1s; opacity: 0.05; }
+    @keyframes wave { 0%,100% { transform: translateX(0) scaleY(1); } 50% { transform: translateX(3%) scaleY(1.1); } }
+
+    .hero-content {
+      position: relative; z-index: 2;
+      padding: 0 5rem 4rem;
+      max-width: 780px;
+    }
+    .hero-tag {
+      display: inline-block;
+      font-size: 0.72rem; letter-spacing: 0.28em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 1.4rem;
+      border-left: 2px solid var(--accent); padding-left: 0.8rem;
+      animation: fadeUp 1s 0.2s ease both;
+    }
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.8rem, 5vw, 4.5rem);
+      font-weight: 700; line-height: 1.1;
+      color: var(--white);
+      margin-bottom: 1.6rem;
+      text-shadow: 0 3px 30px rgba(0,0,0,0.5), 0 1px 8px rgba(0,0,0,0.3);
+      animation: fadeUp 1s 0.4s ease both;
+    }
+    .hero-title em {
+      font-style: italic;
+      color: var(--accent);
+      -webkit-text-stroke: 0px;
+    }
+    .hero-sub {
+      font-size: 1.1rem; font-weight: 400;
+      color: var(--white);
+      line-height: 1.8;
+      max-width: 500px; margin-bottom: 2.8rem;
+      text-shadow: 0 1px 8px rgba(0,0,0,0.6);
+      background: rgba(0,0,0,0.2);
+      padding: 0.8rem 1.2rem;
+      border-radius: 4px;
+      backdrop-filter: blur(4px);
+      animation: fadeUp 1s 0.6s ease both;
+    }
+    .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; animation: fadeUp 1s 0.8s ease both; }
+    .btn-primary {
+      display: inline-block; padding: 1rem 2.6rem;
+      background: var(--accent); color: var(--white); text-decoration: none;
+      font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase;
+      border-radius: 2px; transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 4px 20px rgba(212,149,106,0.35);
+    }
+    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(212,149,106,0.5); }
+    .btn-secondary {
+      display: inline-block; padding: 1rem 2.6rem;
+      border: 1px solid rgba(255,255,255,0.5); color: var(--white); text-decoration: none;
+      font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase;
+      border-radius: 2px; transition: all 0.3s;
+    }
+    .btn-secondary:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.8); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(25px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .scroll-hint {
+      position: absolute; bottom: 2.5rem; right: 4rem; z-index: 2;
+      display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+      color: rgba(255,255,255,0.4); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase;
+      animation: fadeUp 1.5s 1.2s ease both;
+    }
+    .scroll-line {
+      width: 1px; height: 50px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.5), transparent);
+      animation: scrollAnim 2s ease-in-out infinite;
+    }
+    @keyframes scrollAnim { 0%,100% { transform: scaleY(1); opacity:1; } 50% { transform: scaleY(0.4); opacity:0.3; } }
+
+    /* ── SECTIONS ── */
+    section { padding: 5rem 4rem; }
+    .section-label { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.8rem; }
+    .section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.2rem, 4vw, 3.2rem); font-weight: 300; line-height: 1.15; color: var(--sea); margin-bottom: 1.5rem; }
+    .section-title em { font-style: italic; }
+    .section-text { font-size: 0.95rem; line-height: 1.8; color: var(--text-light); max-width: 520px; }
+
+    /* ── SERVIZI ── */
+    #servizi { background: var(--white); }
+    .servizi-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
+    .servizi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+    .servizio-card {
+      background: var(--sand); padding: 1.8rem 1.6rem; border-radius: 4px;
+      border-left: 3px solid transparent;
+      opacity: 1; transform: none;
+      transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+    }
+    .servizio-card:hover { border-left-color: var(--accent); transform: translateY(-4px); box-shadow: 0 12px 32px rgba(26,58,74,0.1); }
+    .card-icon { font-size: 1.6rem; margin-bottom: 0.7rem; display: block; }
+    .card-title { font-family: 'Cormorant Garamond', serif; font-size: 1.15rem; font-weight: 400; color: var(--sea); margin-bottom: 0.4rem; }
+    .card-desc { font-size: 0.82rem; line-height: 1.65; color: var(--text-light); }
+
+    /* ── GALLERY ── */
+    #galleria { background: var(--sea); padding: 5rem 4rem; }
+    #galleria .section-title { color: var(--foam); }
+    #galleria .section-text { color: rgba(255,255,255,0.6); }
+    .gallery-header { max-width: 1200px; margin: 0 auto 3rem; display: flex; justify-content: space-between; align-items: flex-end; }
+    .gallery-grid {
+      max-width: 1200px; margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      grid-template-rows: 280px 280px;
+      gap: 1rem;
+    }
+    .gallery-item { border-radius: 4px; overflow: hidden; position: relative; cursor: pointer; }
+    .gallery-item:nth-child(1) { grid-column: 1; grid-row: 1 / 3; }
+    .gallery-item:nth-child(2) { grid-column: 2; grid-row: 1; }
+    .gallery-item:nth-child(3) { grid-column: 3; grid-row: 1; }
+    .gallery-item:nth-child(4) { grid-column: 2; grid-row: 2; }
+    .gallery-item:nth-child(5) { grid-column: 3; grid-row: 2; }
+    .ph { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s; }
+    .ph { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s; }
+    .gallery-item:hover .ph { transform: scale(1.06); }
+    .gallery-overlay { position: absolute; inset: 0; background: rgba(10,25,35,0); transition: background 0.4s; display: flex; align-items: center; justify-content: center; }
+    .gallery-item:hover .gallery-overlay { background: rgba(10,25,35,0.4); }
+    .gallery-overlay span { color: white; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; opacity: 0; transition: opacity 0.3s; }
+    .gallery-item:hover .gallery-overlay span { opacity: 1; }
+
+    /* ── PRENOTAZIONI ── */
+    #prenotazioni { background: var(--sand); }
+    .prenotazioni-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
+    .booking-form { background: var(--white); padding: 3rem; border-radius: 6px; box-shadow: 0 4px 40px rgba(26,58,74,0.08); }
+    .form-title { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 400; color: var(--sea); margin-bottom: 2rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+    .form-group { margin-bottom: 1.2rem; }
+    .form-group label { display: block; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-light); margin-bottom: 0.5rem; }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%; padding: 0.8rem 1rem; border: 1px solid var(--sand-dark); border-radius: 3px;
+      font-family: 'DM Sans', sans-serif; font-size: 0.9rem; color: var(--text);
+      background: var(--sand); transition: border-color 0.3s, box-shadow 0.3s; outline: none;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      border-color: var(--sea-mid); box-shadow: 0 0 0 3px rgba(44,95,116,0.08); background: var(--white);
+    }
+    .form-group textarea { resize: vertical; min-height: 90px; }
+    .btn-submit {
+      width: 100%; padding: 1rem; background: var(--sea); color: var(--white);
+      border: none; border-radius: 3px; font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem; letter-spacing: 0.12em; text-transform: uppercase;
+      cursor: pointer; transition: background 0.3s, transform 0.2s; margin-top: 0.5rem;
+    }
+    .btn-submit:hover { background: var(--accent); transform: translateY(-1px); }
+    .booking-info { padding-top: 0.5rem; }
+    .info-item { display: flex; gap: 1rem; padding: 1.4rem 0; border-bottom: 1px solid var(--sand-dark); }
+    .info-item:last-child { border-bottom: none; }
+    .info-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 2px; }
+    .info-label { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.3rem; }
+    .info-value { font-size: 0.9rem; color: var(--text); line-height: 1.6; }
+
+    /* ── CONTATTI ── */
+    #contatti { background: var(--white); }
+    .contatti-inner { max-width: 1200px; margin: 0 auto; }
+    .contatti-top { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; margin-top: 3rem; }
+    .contact-details { padding-top: 0.5rem; }
+    .contact-item { display: flex; gap: 1.2rem; margin-bottom: 1.8rem; }
+    .contact-icon { width: 44px; height: 44px; background: var(--sand); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+    .contact-label { font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.25rem; }
+    .contact-value { font-size: 0.95rem; color: var(--text); }
+    .contact-value a { color: var(--sea-mid); text-decoration: none; }
+    .contact-value a:hover { color: var(--accent); }
+
+    /* Social icons */
+    .social-links { display: flex; gap: 1rem; margin-top: 0.5rem; }
+    .social-link {
+      display: flex; align-items: center; justify-content: center;
+      width: 42px; height: 42px; border-radius: 50%;
+      background: var(--sand); transition: all 0.3s; text-decoration: none;
+      font-size: 1.1rem;
+    }
+    .social-link:hover { background: var(--accent); transform: translateY(-3px); box-shadow: 0 6px 16px rgba(212,149,106,0.35); }
+
+    /* ── FOOTER ── */
+    footer { background: var(--sea); padding: 3rem 4rem; display: flex; align-items: center; justify-content: space-between; }
+    .footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 300; color: var(--foam); letter-spacing: 0.06em; }
+    .footer-copy { font-size: 0.78rem; color: rgba(200,221,229,0.5); }
+    .footer-links { display: flex; gap: 2rem; }
+    .footer-links a { font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(200,221,229,0.5); text-decoration: none; transition: color 0.3s; }
+    .footer-links a:hover { color: var(--foam); }
+
+    /* ── TOAST ── */
+    .toast { position: fixed; bottom: 2rem; right: 2rem; z-index: 999; background: var(--sea); color: var(--white); padding: 1rem 2rem; border-radius: 4px; font-size: 0.85rem; box-shadow: 0 8px 32px rgba(0,0,0,0.2); transform: translateY(100px); opacity: 0; transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1); pointer-events: none; }
+    .toast.show { transform: translateY(0); opacity: 1; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      section { padding: 4rem 1.5rem; }
+      .hero-content { padding: 0 1.5rem 4rem; }
+      .hero-title { font-size: clamp(2.8rem, 12vw, 4rem); }
+      .servizi-inner, .prenotazioni-inner, .contatti-top { grid-template-columns: 1fr; gap: 2.5rem; }
+      .gallery-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+      .gallery-grid { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+      .gallery-item { grid-column: auto !important; grid-row: auto !important; height: 180px; }
+      footer { flex-direction: column; gap: 1.5rem; text-align: center; }
+      .footer-links { justify-content: center; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+  
+
+
+    /* ── SERVIZI ── */
+    #servizi { background: var(--white); }
+    .servizi-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 6rem; align-items: center;
+    }
+    .servizi-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+    .servizio-card {
+      background: var(--sand);
+      padding: 2rem 1.8rem;
+      border-radius: 4px;
+      border-left: 3px solid transparent;
+      transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+      opacity: 0; transform: translateY(20px);
+      transition: opacity 0.6s, transform 0.6s, border-color 0.3s, box-shadow 0.3s;
+    }
+    .servizio-card.visible {
+      opacity: 1; transform: translateY(0);
+    }
+    .servizio-card:hover {
+      border-left-color: var(--accent);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(26,58,74,0.1);
+    }
+    .card-icon {
+      font-size: 1.8rem;
+      margin-bottom: 0.8rem;
+      display: block;
+    }
+    .card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem;
+      font-weight: 400;
+      color: var(--sea);
+      margin-bottom: 0.5rem;
+    }
+    .card-desc {
+      font-size: 0.82rem;
+      line-height: 1.65;
+      color: var(--text-light);
+    }
+
+    /* ── GALLERY ── */
+    #galleria {
+      background: var(--sea);
+      padding: 7rem 4rem;
+    }
+    #galleria .section-title { color: var(--foam); }
+    #galleria .section-text { color: rgba(255,255,255,0.6); }
+    .gallery-header {
+      max-width: 1200px; margin: 0 auto 3.5rem;
+      display: flex; justify-content: space-between; align-items: flex-end;
+    }
+    .gallery-grid {
+      max-width: 1200px; margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-template-rows: 240px 240px;
+      gap: 1rem;
+    }
+    .gallery-item {
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+      opacity: 0; transform: scale(0.96);
+      transition: opacity 0.7s, transform 0.7s;
+    }
+    .gallery-item.visible { opacity: 1; transform: scale(1); }
+    .gallery-item:nth-child(1) { grid-column: 1; grid-row: 1 / 3; }
+    .gallery-item:nth-child(2) { grid-column: 2; grid-row: 1; }
+    .gallery-item:nth-child(3) { grid-column: 3; grid-row: 1; }
+    .gallery-item:nth-child(4) { grid-column: 2; grid-row: 2; }
+    .gallery-item:nth-child(5) { grid-column: 3; grid-row: 2; }
+
+    .ph { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s; }
+    .gallery-item:hover .ph { transform: scale(1.06); }
+
+    .gallery-overlay {
+      position: absolute; inset: 0;
+      background: rgba(10,25,35,0);
+      transition: background 0.4s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .gallery-item:hover .gallery-overlay { background: rgba(10,25,35,0.4); }
+    .gallery-overlay span {
+      color: white; font-size: 0.75rem;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .gallery-item:hover .gallery-overlay span { opacity: 1; }
+
+    /* ── PRENOTAZIONI ── */
+    #prenotazioni { background: var(--sand); }
+    .prenotazioni-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 6rem; align-items: start;
+    }
+    .booking-form {
+      background: var(--white);
+      padding: 3rem;
+      border-radius: 6px;
+      box-shadow: 0 4px 40px rgba(26,58,74,0.08);
+    }
+    .form-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem;
+      font-weight: 400;
+      color: var(--sea);
+      margin-bottom: 2rem;
+    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+    .form-group { margin-bottom: 1.2rem; }
+    .form-group label {
+      display: block;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-light);
+      margin-bottom: 0.5rem;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border: 1px solid var(--sand-dark);
+      border-radius: 3px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      color: var(--text);
+      background: var(--sand);
+      transition: border-color 0.3s, box-shadow 0.3s;
+      outline: none;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--sea-mid);
+      box-shadow: 0 0 0 3px rgba(44,95,116,0.08);
+      background: var(--white);
+    }
+    .form-group textarea { resize: vertical; min-height: 90px; }
+    .btn-submit {
+      width: 100%;
+      padding: 1rem;
+      background: var(--sea);
+      color: var(--white);
+      border: none; border-radius: 3px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+      margin-top: 0.5rem;
+    }
+    .btn-submit:hover {
+      background: var(--accent);
+      transform: translateY(-1px);
+    }
+    .booking-info { padding-top: 1rem; }
+    .info-item {
+      display: flex; gap: 1rem;
+      padding: 1.5rem 0;
+      border-bottom: 1px solid var(--sand-dark);
+    }
+    .info-item:last-child { border-bottom: none; }
+    .info-icon { font-size: 1.3rem; flex-shrink: 0; margin-top: 2px; }
+    .info-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.3rem;
+    }
+    .info-value {
+      font-size: 0.9rem;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* ── CONTATTI ── */
+    #contatti { background: var(--white); padding-bottom: 0; }
+    .contatti-inner {
+      max-width: 1200px; margin: 0 auto;
+    }
+    .contatti-top {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 6rem; margin-bottom: 4rem;
+    }
+    .map-placeholder {
+      height: 380px;
+      background: linear-gradient(160deg, var(--foam) 0%, var(--sea-mid) 100%);
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .map-placeholder::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Ccircle cx='30' cy='30' r='28' fill='none' stroke='rgba(255,255,255,0.15)' stroke-width='1'/%3E%3Ccircle cx='30' cy='30' r='18' fill='none' stroke='rgba(255,255,255,0.1)' stroke-width='1'/%3E%3C/svg%3E") center/60px;
+    }
+    .map-pin {
+      position: relative; z-index: 1;
+      text-align: center;
+    }
+    .map-pin span { display: block; font-size: 2.5rem; }
+    .map-pin p {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      color: var(--white);
+      margin-top: 0.5rem;
+    }
+    .contact-details { padding-top: 1rem; }
+    .contact-item {
+      display: flex; gap: 1.2rem;
+      margin-bottom: 2rem;
+    }
+    .contact-icon {
+      width: 44px; height: 44px;
+      background: var(--sand);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .contact-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.25rem;
+    }
+    .contact-value {
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+    .contact-value a {
+      color: inherit; text-decoration: none;
+    }
+    .contact-value a:hover { color: var(--sea-mid); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--sea);
+      padding: 3rem 4rem;
+      display: flex;
+      align-items: center; justify-content: space-between;
+    }
+    .footer-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-weight: 300;
+      color: var(--foam);
+      letter-spacing: 0.06em;
+    }
+    .footer-copy {
+      font-size: 0.78rem;
+      color: rgba(200,221,229,0.5);
+    }
+    .footer-links { display: flex; gap: 2rem; }
+    .footer-links a {
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(200,221,229,0.5);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .footer-links a:hover { color: var(--foam); }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed; bottom: 2rem; right: 2rem; z-index: 999;
+      background: var(--sea);
+      color: var(--white);
+      padding: 1rem 2rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+      transform: translateY(100px); opacity: 0;
+      transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1);
+      pointer-events: none;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 1.2rem 2rem; }
+      .nav-links { display: none; }
+      section { padding: 5rem 2rem; }
+      #hero { padding: 0; }
+      .hero-content { padding: 0 2rem 5rem; }
+      .servizi-inner,
+      .prenotazioni-inner,
+      .contatti-top { grid-template-columns: 1fr; gap: 3rem; }
+      .gallery-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+      .gallery-grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto;
+      }
+      .gallery-item { grid-column: auto !important; grid-row: auto !important; height: 180px; }
+      footer { flex-direction: column; gap: 1.5rem; text-align: center; }
+      .footer-links { justify-content: center; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <a href="#hero" class="nav-logo">Spiaggia dei Gabbiani<span>Stabilimento Balneare · Fano</span></a>
+  <ul class="nav-links">
+    <li><a href="#servizi">Servizi</a></li>
+    <li><a href="#galleria">Galleria</a></li>
+    <li><a href="#prenotazioni">Prenota</a></li>
+    <li><a href="#contatti">Contatti</a></li>
+  </ul>
+  <a href="#prenotazioni" class="nav-cta">Prenota ora</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg">
+    <div class="hero-bg-img"></div>
+    <div class="wave-layer"></div>
+    <div class="wave-layer"></div>
+    <div class="wave-layer"></div>
+  </div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <h1 class="hero-title">Il lusso di<br><em>avere spazio</em></h1>
+    <p class="hero-sub">Ombrelloni, lettini e relax a due passi dal mare cristallino. Un'estate che non dimenticherai.</p>
+    <div class="hero-btns">
+      <a href="#prenotazioni" class="btn-primary">Prenota il tuo spazio</a>
+      <a href="#servizi" class="btn-secondary">Scopri i servizi</a>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <span>Scopri</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- SERVIZI -->
+<section id="servizi">
+  <div class="servizi-inner">
+    <div>
+      <p class="section-label">I nostri servizi</p>
+      <h2 class="section-title">Tutto ciò che <em>ti serve</em><br>per una giornata perfetta</h2>
+      <p class="section-text">Ogni dettaglio è curato per offrirti il massimo relax. Dal mattino al tramonto, siamo qui per te.</p>
+    </div>
+    <div class="servizi-grid">
+      <div class="servizio-card">
+        <span class="card-icon">☂️</span>
+        <div class="card-title">Ombrelloni & Lettini</div>
+        <p class="card-desc">Solo sei file di ombrelloni, con ampio spazio tra una postazione e l'altra. Il relax comincia già dalla spiaggia.</p>
+      </div>
+      <div class="servizio-card">
+        <span class="card-icon">🚿</span>
+        <div class="card-title">Cabine & Docce</div>
+        <p class="card-desc">Docce calde e spogliatoi privati per la tua comodità.</p>
+      </div>
+      <div class="servizio-card">
+        <span class="card-icon">🧒</span>
+        <div class="card-title">Area Bimbi</div>
+        <p class="card-desc">Un'area giochi con sabbia dedicata ai più piccoli, per farli giocare in tutta sicurezza.</p>
+      </div>
+      <div class="servizio-card">
+        <span class="card-icon">🅿️</span>
+        <div class="card-title">Parcheggio</div>
+        <p class="card-desc">Ampio parcheggio gratuito riservato ai clienti, a soli 200 metri dallo stabilimento.</p>
+      </div>
+      <div class="servizio-card">
+        <span class="card-icon">☕</span>
+        <div class="card-title">Distributori & Gazebo</div>
+        <p class="card-desc">Caffè, snack e bibite sempre disponibili. Pranza in relax nelle nostre due aree gazebo coperte, con il cibo da asporto dei ristoranti vicini o quello portato da casa.</p>
+      </div>
+      <div class="servizio-card">
+        <span class="card-icon">🎯</span>
+        <div class="card-title">Sport & Svago</div>
+        <p class="card-desc">Campo da bocce gratuito e campo da beach volley a pagamento. Per chi vuole godersi l'estate in movimento.</p>
+      </div>
+      <div class="servizio-card" style="grid-column: 1 / -1;">
+        <span class="card-icon">🪨</span>
+        <div class="card-title">Spiaggia di ciottoli bianchi</div>
+        <p class="card-desc">Dimentica la sabbia appiccicata ovunque. La nostra spiaggia è fatta di piccoli ciottoli bianchi di fiume, levigati dal tempo: riflettono il sole, potenziano l'abbronzatura e rendono ogni giornata al mare più comoda e pulita. Niente granelli nelle scarpe, niente teli da scuotere. Dove la ghiaia lascia spazio all'acqua, troverai anche fondali sabbiosi morbidi e bassi, perfetti per i bambini. Non è la spiaggia di tutti — è la spiaggia di chi cerca qualcosa di meglio.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERIA -->
+<section id="galleria">
+  <div class="gallery-header">
+    <div>
+      <p class="section-label" style="color: var(--foam)">Galleria</p>
+      <h2 class="section-title">Un assaggio<br>di <em>estate</em></h2>
+    </div>
+    <p class="section-text">Le nostre spiagge, i nostri tramonti.<br>Scorri per scoprire di più.</p>
+  </div>
+  <div class="gallery-grid">
+    <div class="gallery-item"><img class="ph" src="foto_ombrelloni_tre.jpg" alt="Ombrelloni sul mare" /><div class="gallery-overlay"><span>La nostra spiaggia</span></div></div>
+    <div class="gallery-item"><img class="ph" src="foto_vista_alto.jpg" alt="Vista dall'alto" /><div class="gallery-overlay"><span>Vista panoramica</span></div></div>
+    <div class="gallery-item"><img class="ph" src="foto_ombrelloni_verdi.jpg" alt="Ombrelloni e lettini" /><div class="gallery-overlay"><span>I nostri ombrelloni</span></div></div>
+    <div class="gallery-item"><img class="ph" src="foto_lettini_mattina.jpg" alt="Lettini mattina" /><div class="gallery-overlay"><span>Mattina in spiaggia</span></div></div>
+    <div class="gallery-item"><img class="ph" src="foto_tramonto_sdraio.jpg" alt="Tramonto in spiaggia" /><div class="gallery-overlay"><span>Tramonto</span></div></div>
+  </div>
+</section>
+
+<!-- PRENOTAZIONI -->
+<section id="prenotazioni">
+  <div class="prenotazioni-inner">
+    <div class="booking-info">
+      <p class="section-label">Prenotazioni</p>
+      <h2 class="section-title">Riserva il tuo<br><em>posto al sole</em></h2>
+      <p class="section-text">Prenota online il tuo ombrellone o pacchetto stagionale. Ti confermiamo la disponibilità entro 24 ore.</p>
+
+      <div style="margin-top: 3rem">
+        <div class="info-item">
+          <span class="info-icon">🗓️</span>
+          <div>
+            <p class="info-label">Stagione</p>
+            <p class="info-value">20 Maggio – 10 Settembre</p>
+          </div>
+        </div>
+        <div class="info-item">
+          <span class="info-icon">🕘</span>
+          <div>
+            <p class="info-label">Orari</p>
+            <p class="info-value">Tutti i giorni, 8:00 – 19:00</p>
+          </div>
+        </div>
+        <div class="info-item">
+          <span class="info-icon">💳</span>
+          <div>
+            <p class="info-label">Pagamento</p>
+            <p class="info-value">Carta di credito, bancomat o contanti in loco</p>
+          </div>
+        </div>
+        <div class="info-item">
+          <span class="info-icon">📋</span>
+          <div>
+            <p class="info-label">Cancellazione</p>
+            <p class="info-value">Gratuita fino a 48h prima dell'arrivo</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="booking-form">
+      <p class="form-title">Richiedi una prenotazione</p>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Nome</label>
+          <input id="f-nome" type="text" placeholder="Mario" />
+        </div>
+        <div class="form-group">
+          <label>Cognome</label>
+          <input id="f-cognome" type="text" placeholder="Rossi" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input id="f-email" type="email" placeholder="mario@email.com" />
+      </div>
+      <div class="form-group">
+        <label>Telefono</label>
+        <input id="f-tel" type="tel" placeholder="+39 000 000 0000" />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Data arrivo</label>
+          <input id="f-arrivo" type="date" />
+        </div>
+        <div class="form-group">
+          <label>Data partenza</label>
+          <input id="f-partenza" type="date" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Tipo di postazione</label>
+        <select id="f-postazione">
+          <option>Ombrellone + 1 lettino</option>
+          <option>Ombrellone + 2 lettini</option>
+          <option>Ombrellone + lettino + sedia</option>
+          <option>Prima fila – ombrellone + 2 lettini</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Note (opzionale)</label>
+        <textarea id="f-note" placeholder="Richieste particolari, accessibilità, ecc."></textarea>
+      </div>
+      <button class="btn-submit" onclick="sendWhatsApp()">Invia su WhatsApp</button>
+    </div>
+  </div>
+</section>
+
+<!-- CONTATTI -->
+<section id="contatti">
+  <div class="contatti-inner">
+    <p class="section-label">Dove siamo</p>
+    <h2 class="section-title">Vieni a <em>trovarci</em></h2>
+    <div class="contatti-top">
+      <div style="height:380px; border-radius:6px; overflow:hidden; box-shadow: 0 4px 24px rgba(26,58,74,0.12);">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d800!2d13.052!3d43.8318!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x132d11a5a673e06f%3A0x289d60dc3e977e44!2sSpiaggia%20dei%20gabbiani%20-%20Fano!5e0!3m2!1sit!2sit!4v1716000000003!5m2!1sit!2sit"
+          width="100%" height="100%"
+          style="border:0;"
+          allowfullscreen=""
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+      <div class="contact-details">
+        <div class="contact-item">
+          <div class="contact-icon">📍</div>
+          <div>
+            <p class="contact-label">Indirizzo</p>
+            <p class="contact-value">Via delle Brecce s.n.c.<br>61032 Fano (PU)</p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">💬</div>
+          <div>
+            <p class="contact-label">WhatsApp</p>
+            <p class="contact-value"><a href="https://wa.me/393454842053">+39 345 484 2053</a></p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">✉️</div>
+          <div>
+            <p class="contact-label">Email</p>
+            <p class="contact-value"><a href="/cdn-cgi/l/email-protection#c4adaaa2ab84b7b4ada5a3a3ada5a0a1ada3a5a6a6ada5aaadeaadb0"><span class="__cf_email__" data-cfemail="cda4a3aba28dbebda4acaaaaa4aca9a8a4aaacafafa4aca3a4e3a4b9">[email&#160;protected]</span></a></p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">📱</div>
+          <div>
+            <p class="contact-label">Seguici sui social</p>
+            <div class="social-links">
+              <a href="https://www.facebook.com/share/1HoUG5fdcj/" target="_blank" class="social-link" title="Facebook">📘</a>
+              <a href="https://www.instagram.com/spiaggia_dei_gabbiani_fano?igsh=MTd3MXN1Yzh3amg5Zg==" target="_blank" class="social-link" title="Instagram">📸</a>
+              <a href="https://www.tiktok.com/@spiaggia.dei.gabbiani?_r=1&_t=ZN-95Qjzgkam8c" target="_blank" class="social-link" title="TikTok">🎵</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Spiaggia dei Gabbiani</div>
+  <p class="footer-copy">© 2025 Spiaggia dei Gabbiani</p>
+  <div class="footer-links">
+    <a href="#">Privacy Policy</a>
+    <a href="#">Cookie Policy</a>
+    <a href="#contatti">Contatti</a>
+  </div>
+</footer>
+<div style="background: var(--sea); text-align: center; padding: 0.8rem 2rem; border-top: 1px solid rgba(255,255,255,0.05);">
+  <p style="font-size: 0.65rem; color: rgba(200,221,229,0.35); letter-spacing: 0.05em;">Titolare: Walter Stafoggia · Via Lucio Domizio Aureliano s.n.c., 61032 Fano (PU) · P.IVA IT02513530416</p>
+</div>
+
+<div class="toast" id="toast">✓ Richiesta inviata! Ti risponderemo presto.</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  // Nav scroll
+  const nav = document.getElementById('mainNav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // Intersection observer for cards & gallery
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.servizio-card, .gallery-item').forEach(el => observer.observe(el));
+
+  // WhatsApp form
+  function sendWhatsApp() {
+    const nome = document.getElementById('f-nome').value.trim();
+    const cognome = document.getElementById('f-cognome').value.trim();
+    const email = document.getElementById('f-email').value.trim();
+    const tel = document.getElementById('f-tel').value.trim();
+    const arrivo = document.getElementById('f-arrivo').value;
+    const partenza = document.getElementById('f-partenza').value;
+    const postazione = document.getElementById('f-postazione').value;
+    const note = document.getElementById('f-note').value.trim();
+
+    if (!nome || !cognome || !arrivo || !partenza) {
+      alert('Per favore compila almeno nome, cognome e date del soggiorno.');
+      return;
+    }
+
+    const msg =
+      `🏖️ *Richiesta di prenotazione - Spiaggia dei Gabbiani*\n\n` +
+      `👤 *Nome:* ${nome} ${cognome}\n` +
+      `📧 *Email:* ${email || '—'}\n` +
+      `📞 *Telefono:* ${tel || '—'}\n` +
+      `📅 *Arrivo:* ${arrivo}\n` +
+      `📅 *Partenza:* ${partenza}\n` +
+      `☂️ *Postazione:* ${postazione}\n` +
+      `📝 *Note:* ${note || '—'}`;
+
+    const url = `https://wa.me/393454842053?text=${encodeURIComponent(msg)}`;
+    window.open(url, '_blank');
+  }
+</script>
+</body>
+</html>
